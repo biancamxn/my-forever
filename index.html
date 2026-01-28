@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>Valentine Surprise</title>
+<style>
+body {
+    margin:0;
+    font-family:'Arial', sans-serif;
+    background:pink;
+    text-align:center;
+    overflow:hidden;
+    transition: background 0.2s;
+}
+h1, p { color:white; }
+h1.pulse {
+    animation: pulse 1s infinite;
+}
+@keyframes pulse {
+    0%,100% { transform: scale(1); text-shadow: 0 0 5px #fff; }
+    50% { transform: scale(1.1); text-shadow: 0 0 20px #ff69b4, 0 0 30px #ff1493; }
+}
+button {
+    padding: 15px 30px;
+    font-size: 20px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    margin:10px;
+    position:relative;
+}
+#yes { background:red; color:white; }
+#no { background:white; color:red; position:absolute; top:200px; left:200px; }
+.heart { position:fixed; top:-30px; font-size:24px; animation:fall linear infinite; }
+@keyframes fall { to { transform: translateY(110vh); } }
+#finalScreen {
+    position:fixed;
+    inset:0;
+    background: radial-gradient(circle,#ff69b4,#ff1493,#6a0036);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    opacity:0;
+    transition:opacity 1s;
+    z-index:999;
+}
+#finalScreen.active { opacity:1; }
+#finalScreen h1 { color:white; font-size:48px; }
+</style>
+</head>
+<body>
+
+<h1 class="pulse">💖 Baby 💖</h1>
+<p>Do you wanna be my forever? 💕</p>
+
+<button id="yes">YES💘</button>
+<button id="no">NO 😈</button>
+
+<div id="finalScreen">
+<h1 class="pulse">I would choose you<br>in every universe ✨💖</h1>
+</div>
+
+<script>
+// AUDIO
+const audio = new Audio("music.mp3");
+
+// glow pe fundal sincronizat
+let glowInterval;
+function startGlow() {
+    glowInterval = setInterval(()=>{
+        const r = Math.floor(255);
+        const g = Math.floor(105 + Math.random()*50);
+        const b = Math.floor(180 + Math.random()*75);
+        document.body.style.background = `rgb(${r},${g},${b})`;
+    },200);
+}
+
+// DA click
+document.getElementById("yes").addEventListener("click", () => {
+    audio.loop = true;
+    audio.play();
+
+    // start glow
+    startGlow();
+
+    // arata ecran final
+    const screen = document.getElementById("finalScreen");
+    screen.style.display="flex";
+    setTimeout(()=>{screen.classList.add("active");},100);
+
+    // inimioare
+    setInterval(()=>{
+        const heart = document.createElement("div");
+        heart.className="heart";
+        heart.innerHTML="💖";
+        heart.style.left=Math.random()*100+"vw";
+        heart.style.fontSize=(Math.random()*30+20)+"px";
+        heart.style.animationDuration=(Math.random()*3+2)+"s";
+        document.body.appendChild(heart);
+        setTimeout(()=>heart.remove(),5000);
+    },300);
+});
+
+// NU fuge
+document.getElementById("no").addEventListener("mouseover", ()=>{
+    const noBtn = document.getElementById("no");
+    const x = Math.random()*(window.innerWidth-100);
+    const y = Math.random()*(window.innerHeight-50);
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+});
+</script>
+
+</body>
+</html>
